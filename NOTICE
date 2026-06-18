@@ -1,0 +1,33 @@
+Pi Fable
+Copyright (C) 2026 Joel Hooks
+
+Pi Fable is a Pi-native adaptation of evidence-gated agent workflow ideas.
+It is distributed under AGPL-3.0-or-later because its closest direct model,
+FableCodex, is AGPL-3.0-or-later.
+
+Primary sources and influences:
+
+- baskduf/FableCodex, inspected from https://github.com/baskduf/FableCodex.
+  Pi Fable adapts its evidence-based goal ledger, findings gate, routing map,
+  provenance habit, and public package shape for Pi instead of Codex.
+
+- voodootikigod/adlc, inspected from https://github.com/voodootikigod/adlc,
+  especially scripts/rails-guard-ci.mjs, scripts/release.mjs, and the ADLC
+  convention of small machine-checkable gates with trusted-base reads, offline
+  throwaway-git tests, dry-run bias, and exit-code truth. Pi Fable's
+  scripts/fable-guard-ci.mjs and scripts/release.mjs are local implementations
+  inspired by those scripts. ADLC is MIT licensed.
+
+- nicobailon/pi-subagents, https://github.com/nicobailon/pi-subagents.
+  Pi Fable is intentionally built around pi-subagents instead of spawning its
+  own agent runtime. pi-subagents is MIT licensed.
+
+FableCodex itself credits these upstream prompt/workflow sources:
+
+- elder-plinius/CL4R1T4S, commit dc626fed52b06d687cdc812d51090c95ed03d575.
+- fivetaku/fablize, commit 15912466994e71a234d18fe9c74b46a68fb6a07d.
+- itsinseong/value-for-fable, commit 35a9bd27de961a49c343f41ac47c49114d51a328.
+
+This project does not copy or claim access to any Fable-family model. It is a
+workflow layer: classify the work, inspect first, use pi-subagents deliberately,
+record evidence, close findings, and verify before claiming completion.

@@ -1,0 +1,84 @@
+{
+  "name": "pi-fable",
+  "version": "0.1.0",
+  "description": "Pi-native evidence gates and subagent orchestration inspired by FableCodex.",
+  "type": "module",
+  "license": "AGPL-3.0-or-later",
+  "author": "Joel Hooks",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joelhooks/pi-fable.git"
+  },
+  "homepage": "https://github.com/joelhooks/pi-fable#readme",
+  "bugs": {
+    "url": "https://github.com/joelhooks/pi-fable/issues"
+  },
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-coding-agent",
+    "pi-subagents",
+    "subagents",
+    "agentic-workflow",
+    "fable",
+    "adlc",
+    "xstate",
+    "effect"
+  ],
+  "files": [
+    "extensions/",
+    "src/",
+    "skills/",
+    "prompts/",
+    "docs/",
+    "scripts/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test test/*.test.ts test/*.test.mjs",
+    "guard:ci": "node scripts/fable-guard-ci.mjs",
+    "release:version": "node scripts/release.mjs",
+    "verify": "npm run check && npm test"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions/pi-fable/index.ts"
+    ],
+    "skills": [
+      "./skills"
+    ],
+    "prompts": [
+      "./prompts"
+    ]
+  },
+  "dependencies": {
+    "effect": "beta",
+    "typebox": "^1.1.24",
+    "xstate": "^5.32.1"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-agent-core": {
+      "optional": true
+    },
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@earendil-works/pi-agent-core": "^0.74.0",
+    "@earendil-works/pi-coding-agent": "^0.74.0",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

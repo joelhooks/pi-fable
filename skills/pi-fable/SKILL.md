@@ -23,10 +23,11 @@ Pi Fable adapts FableCodex-style workflow discipline to Pi. It is a process laye
 2. Inspect first. Read real files, logs, docs, screenshots, diffs, issues, or source links before claiming.
 3. Choose the smallest fitting process.
 4. For dependent multi-step work, create a goal ledger with `pi_fable_goal`.
-5. Delegate through `subagent` when a child actually helps: scout, researcher, oracle, worker, reviewer, context-builder.
-6. Record accepted blockers with `pi_fable_finding`.
-7. Verify with tests, typecheck, lint, browser, screenshots, logs, command output, source inspection, or API readback.
-8. Before final completion, check `pi_fable_status`; run `pi_fable_finding` gate when findings may remain.
+5. Delegate through `subagent` when a child actually helps: scout, researcher, oracle, worker, reviewer, context-builder, or installed `pi-fable.*` specialists.
+6. If specialist Pi Fable agents are needed, use `pi_fable_agents` to install the opt-in templates; package resources do not auto-load subagent agent paths.
+7. Record accepted blockers with `pi_fable_finding`.
+8. Verify with tests, typecheck, lint, browser, screenshots, logs, command output, source inspection, or API readback.
+9. Before final completion, check `pi_fable_status`; run `pi_fable_finding` gate when findings may remain.
 
 ## Routing table
 
@@ -86,6 +87,24 @@ Do **not** add findings for vague optional polish or speculative ideas.
 Resolve only after fix + verification evidence.
 
 Run `pi_fable_finding` with `action: "gate"` before final completion when findings may exist.
+
+## Specialist agents
+
+Pi Fable ships opt-in specialist agent templates for `pi-subagents`:
+
+- `pi-fable.oracle` — read-only decision/drift advisory before irreversible decisions.
+- `pi-fable.findings-reviewer` — fresh-context review that returns candidate findings for the parent to accept/reject.
+- `pi-fable.verifier` — read-only behavioral verification and residual-risk reporting.
+
+They are not auto-loaded by the Pi package manifest. Install them first:
+
+```json
+{ "action": "install", "scope": "project" }
+```
+
+Use project scope by default so repos can inspect and adapt the templates. Use user scope only when Joel wants them everywhere.
+
+Do not add a `pi-fable.worker` by default. Use the builtin `worker` as the single writer unless a specific repo needs a custom worker.
 
 ## Subagent prompting
 

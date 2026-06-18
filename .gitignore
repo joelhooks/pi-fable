@@ -1,6 +1,9 @@
 node_modules/
 dist/
 .pi-fable/
+.pi/
+.brain/
+BRAIN.md
 coverage/
 *.log
 .DS_Store

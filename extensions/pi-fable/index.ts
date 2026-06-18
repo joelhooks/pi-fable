@@ -35,6 +35,7 @@ interface ExtensionAPI {
     readonly handler: (args: readonly string[], ctx: ExtensionContext) => void | Promise<void>;
   }): void;
 }
+import { handleAgentTemplates } from "../../src/agent-templates.ts";
 import { classifyRequest } from "../../src/router.ts";
 import { handleFinding, handleGoal, handleStatus } from "../../src/state.ts";
 
@@ -78,6 +79,15 @@ const RouteParams = Type.Object({
 }, { additionalProperties: false });
 
 type RouteParams = Static<typeof RouteParams>;
+
+const AgentsParams = Type.Object({
+  action: Type.String({ enum: ["list", "install"], description: "Agent template action to run." }),
+  scope: Type.Optional(Type.String({ enum: ["project", "user"], description: "Install target scope. Project writes .pi/agents/pi-fable; user writes ~/.pi/agent/agents/pi-fable." })),
+  force: Type.Optional(Type.Boolean({ description: "Overwrite existing installed templates." })),
+  dryRun: Type.Optional(Type.Boolean({ description: "Preview install paths without writing files." })),
+}, { additionalProperties: false });
+
+type AgentsParams = Static<typeof AgentsParams>;
 
 type ToolDetails = Record<string, unknown>;
 
@@ -128,6 +138,33 @@ export default function registerPiFable(pi: ExtensionAPI): void {
         `pi-fable route: ${route.id} — ${route.label}\nReason: ${route.reason}\nPattern: ${route.subagentPattern}\nGoal ledger: ${route.goalLedger}; findings gate: ${route.findingsGate}`,
         { ok: true, route },
       );
+    },
+  });
+
+  pi.registerTool({
+    name: "pi_fable_agents",
+    label: "Pi Fable Agents",
+    description: "List or install Pi Fable specialist pi-subagents templates into project/user agent scope.",
+    promptSnippet: "pi_fable_agents: install opt-in pi-fable.* specialist subagent templates when a workflow needs reusable Fable roles.",
+    promptGuidelines: [
+      "Pi package resources do not auto-load pi-subagents agent definitions; install templates into .pi/agents or ~/.pi/agent/agents first.",
+      "Prefer project scope for repo-specific work. Do not force-overwrite existing agent templates unless the user approves.",
+    ],
+    parameters: AgentsParams,
+    async execute(_toolCallId: string, params: AgentsParams, _signal, _onUpdate, ctx) {
+      try {
+        const output = await handleAgentTemplates(commandCwd(ctx), packageRoot, params as Parameters<typeof handleAgentTemplates>[2]);
+        const names = output.templates.map((template) => template.runtimeName).join(", ");
+        const actionLine = output.action === "list"
+          ? `available templates: ${names}`
+          : `${output.dryRun ? "would install" : "installed"} ${output.installed.length} template(s), skipped ${output.skipped.length}`;
+        return textResult(
+          `pi-fable agents: ${actionLine}\nTarget: ${output.targetDir}`,
+          { ok: true, agents: output },
+        );
+      } catch (error) {
+        return errorResult(error);
+      }
     },
   });
 

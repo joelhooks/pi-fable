@@ -26,6 +26,7 @@
     "effect"
   ],
   "files": [
+    "agents/",
     "extensions/",
     "src/",
     "skills/",

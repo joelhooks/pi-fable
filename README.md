@@ -42,9 +42,14 @@ Restart or `/reload` Pi.
   - `/fable-review` — fresh-context review and findings closeout.
 - Tools:
   - `pi_fable_route` — classify a task and return the recommended pi-subagents pattern.
+  - `pi_fable_agents` — list/install opt-in `pi-fable.*` specialist subagent templates.
   - `pi_fable_goal` — create, advance, checkpoint, and inspect `.pi-fable/goals.json`.
   - `pi_fable_finding` — add, resolve, reject, block, reopen, list, and gate `.pi-fable/findings.json`.
   - `pi_fable_status` — summarize goals and findings.
+- Specialist subagent templates:
+  - `pi-fable.oracle`
+  - `pi-fable.findings-reviewer`
+  - `pi-fable.verifier`
 
 Local state lives in `.pi-fable/` and is intentionally uncommitted by default.
 
@@ -75,6 +80,44 @@ Pi Fable maps task signals to concrete `pi-subagents` patterns.
 | External docs/API/provider/current facts | `research` | `researcher` + `scout`, then synthesis before writing. |
 | Unclear product/architecture tradeoff | `decide` | `oracle` for challenge, ask human before irreversible scope changes. |
 | Renderable UI/CLI/artifact | `verify` | Use the artifact naturally; screenshot/log/output evidence beats vibes. |
+
+## Specialist subagents
+
+Pi packages currently auto-discover skills, prompts, extensions, and themes. `pi-subagents` agent definitions are discovered from user/project agent directories, not arbitrary package resource paths. So Pi Fable ships specialist agents as opt-in templates instead of silently shadowing your existing subagents.
+
+Call `pi_fable_agents` to list templates:
+
+```json
+{ "action": "list" }
+```
+
+Install into the current project:
+
+```json
+{ "action": "install", "scope": "project" }
+```
+
+This writes:
+
+```text
+.pi/agents/pi-fable/oracle.md
+.pi/agents/pi-fable/findings-reviewer.md
+.pi/agents/pi-fable/verifier.md
+```
+
+Install globally instead:
+
+```json
+{ "action": "install", "scope": "user" }
+```
+
+After install, run `/reload` or start a new Pi session, then use:
+
+```json
+{ "agent": "pi-fable.findings-reviewer", "agentScope": "both", "task": "Review the current diff and return candidate findings only." }
+```
+
+These agents are intentionally read-only advisory/verification roles. Use the builtin `worker` for writing so the active worktree still has one writer.
 
 ## Goal ledger
 

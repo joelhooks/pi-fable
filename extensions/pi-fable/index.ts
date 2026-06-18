@@ -1,8 +1,40 @@
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { AgentToolResult } from "@earendil-works/pi-agent-core";
-import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 import { Type, type Static } from "typebox";
+
+interface TextContent {
+  readonly type: "text";
+  readonly text: string;
+}
+
+interface AgentToolResult<TDetails extends Record<string, unknown> = Record<string, unknown>> {
+  readonly content: readonly TextContent[];
+  readonly details: TDetails;
+}
+
+interface ExtensionContext {
+  readonly cwd?: string;
+  readonly ui: {
+    notify(message: string, level?: "info" | "warning" | "error"): void;
+  };
+}
+
+interface ExtensionAPI {
+  on(event: "resources_discover", handler: () => Record<string, readonly string[]>): void;
+  registerTool(tool: {
+    readonly name: string;
+    readonly label: string;
+    readonly description: string;
+    readonly promptSnippet?: string;
+    readonly promptGuidelines?: readonly string[];
+    readonly parameters: unknown;
+    readonly execute: (...args: any[]) => AgentToolResult | Promise<AgentToolResult>;
+  }): void;
+  registerCommand(name: string, command: {
+    readonly description: string;
+    readonly handler: (args: readonly string[], ctx: ExtensionContext) => void | Promise<void>;
+  }): void;
+}
 import { classifyRequest } from "../../src/router.ts";
 import { handleFinding, handleGoal, handleStatus } from "../../src/state.ts";
 
